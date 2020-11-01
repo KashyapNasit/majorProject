@@ -1,0 +1,4 @@
+package com.kashyap.majorProject.logic;
+
+public class Service {
+}
