@@ -1,8 +1,12 @@
-package com.kashyap.majorProject.logic;
+package com.kashyap.majorProject.controller;
 
+import com.google.gson.JsonObject;
 import com.kashyap.majorProject.DAO.MetaData;
+import com.kashyap.majorProject.DAO.Student;
+import com.kashyap.majorProject.logic.SQLEngineImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class Controller {
 
-    private Logger logger = LoggerFactory.getLogger(Controller.class);
+    private Logger logger = LoggerFactory.getLogger("Controller");
+    @Autowired
+    private SQLEngineImpl sqlEngine;
 
     @RequestMapping(value = "/ping",method = RequestMethod.GET)
     public ResponseEntity<?> ping(){
@@ -25,7 +31,9 @@ public class Controller {
     @RequestMapping(value = "/getData",method = RequestMethod.GET)
     public ResponseEntity<?> getData(@RequestBody MetaData metaData){
         logger.info("Got metaData : " + metaData.toString());
-        return ResponseEntity.status(HttpStatus.OK).body("pong");
+        Student s = sqlEngine.getStudentWithRegno(metaData.getPrimaryKeys().get("regno").toString());
+        logger.debug(s.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(s);
     }
 
 }
